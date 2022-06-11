@@ -1,1 +1,87 @@
 
+#include<bits/stdc++.h>
+using namespace std;
+
+
+class Solution 
+{
+   public:
+   class Coordinates{
+    public:
+    int x;
+    int y;
+    int dis;
+    Coordinates(int x,int y,int dis){
+        this->x=x;
+        this->y=y;
+        this->dis=dis;
+    }
+   };
+   
+    public: 
+    bool isValid(int x,int y,int n){
+        
+        if( x>=1 && x<=n && y>=1 && y<=n)
+            return true;
+        return false;
+    }
+   
+    public:
+    //Function to find out minimum steps Knight needs to reach target position.
+	int minStepToReachTarget(vector<int>&KnightPos,vector<int>&target,int n)
+	{
+	    vector<vector<int>> vis(n+1, vector<int>(n+1, 0));
+	    
+	    int dx[] = {-2, -2, -1, -1, 1, 1, 2, 2};
+	    int dy[] = {-1, 1, -2, 2, -2, 2, -1, 1};
+	    
+	    
+	    queue<Coordinates> q;
+	    q.push(Coordinates(KnightPos[0], KnightPos[1], 0));
+	    
+	    while(!q.empty()){
+	        Coordinates curr = q.front();
+	        q.pop();
+	        if(curr.x==target[0]&&curr.y==target[1])
+                return curr.dis;
+            
+            // explore all possible positions to move
+            for(int i = 0; i < 8; i++){
+                int x = curr.x + dx[i]; // new possible positions
+                int y = curr.y + dy[i];
+                
+                if(isValid(x,y, n) && !vis[x][y]){
+                    vis[x][y] = 1;
+                    q.push(Coordinates(x,y, curr.dis + 1));
+                }
+                
+            }
+            
+ 	    }
+ 	    
+ 	    return -1;
+	    
+	}
+
+
+
+
+
+};
+
+int main(){
+	int tc;
+	cin >> tc;
+	while(tc--){
+		vector<int>KnightPos(2);
+		vector<int>TargetPos(2);
+		int N;
+		cin >> N;
+		cin >> KnightPos[0] >> KnightPos[1];
+		cin >> TargetPos[0] >> TargetPos[1];
+		Solution obj;
+		int ans = obj.minStepToReachTarget(KnightPos, TargetPos, N);
+		cout << ans <<"\n";
+	}
+	return 0;
+}  
