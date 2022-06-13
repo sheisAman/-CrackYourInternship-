@@ -1,0 +1,106 @@
+# this code is giving error for larger inputs.idky
+
+
+
+// { Driver Code Starts
+#include<bits/stdc++.h>
+using namespace std;
+
+ // } Driver Code Ends
+
+
+class Solution
+{
+	public:
+	//function to do dfs in topo faishon
+	void topodfs(int V, vector<int> adj[], vector<int>&vis, stack<int>& st, int node){
+	    
+	    vis[node] = 1;
+	    for(int i = 0; i < adj[node].size(); i++){
+	        if(vis[adj[node][i]] == 0)
+	        topodfs(V, adj, vis, st, adj[node][i]);
+	    }
+	    
+	    st.push(node);
+	}
+	
+	//function to traverse a SCC in dfs faishon (trans graph)
+	void dfs(vector<int>& vis, vector<int> trans[], int node){
+	    vis[node] = 1;
+	    
+	    for(auto i : trans[node]){
+	        if(!vis[i])
+	        dfs(vis, trans, i);
+	    }
+	}
+	
+	//Function to find number of strongly connected components in the graph.
+    int kosaraju(int V, vector<int> adj[])
+    {
+        //1. we need to perfrom dfs in topological faishon
+        //2. transpose the edges
+        //3. perform reverse dfs
+        
+        stack<int> st;
+        vector<int> vis(V,0);
+        for(int i = 0; i < V; i++){
+            if(!vis[i])
+                topodfs(V, adj, vis, st, i);
+        }
+        
+        // transpose the graph
+        vector<int> trans[V+1];
+        fill(vis.begin(), vis.end(), 0);
+
+        for(int i = 0; i < V; i++){
+            for(int j = 0; j < adj[i].size(); i++){
+                trans[adj[i][j]].push_back(i);
+            }
+        }
+        
+        int scc = 0;
+        while(!st.empty()){
+            int node = st.top();
+	        st.pop();
+	        if(vis[node]!=1){
+	            scc++;
+	            dfs(vis,trans, node);
+	        }
+        }
+        
+        return scc;
+    }
+};
+
+// { Driver Code Starts.
+
+
+int main()
+{
+    
+    int t;
+    cin >> t;
+    while(t--)
+    {
+    	int V, E;
+    	cin >> V >> E;
+
+    	vector<int> adj[V];
+
+    	for(int i = 0; i < E; i++)
+    	{
+    		int u, v;
+    		cin >> u >> v;
+    		adj[u].push_back(v);
+    	}
+
+    	Solution obj;
+    	cout << obj.kosaraju(V, adj) << "\n";
+    }
+
+    return 0;
+}
+
+  // } Driver Code Ends
+© 2022 GitHub, Inc.
+Terms
