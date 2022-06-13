@@ -1,0 +1,30 @@
+class Solution {
+public:
+    
+    // function to find out he maximum time to reach the leaf node
+    int max_time = 0;
+    void dfs(int head, vector<int> adj[], vector<int>& informTime, int time){
+        time = time + informTime[head];
+        
+        for(auto it : adj[head]){ 
+            dfs(it, adj, informTime, time);
+        }
+        
+        max_time = max(time, max_time);
+        
+        
+    }
+    int numOfMinutes(int n, int headID, vector<int>& manager, vector<int>& informTime) {
+        
+        vector<int> adj[n];
+        for(int i = 0; i < manager.size(); i++){
+            
+            if(manager[i]!=-1)
+            adj[manager[i]].push_back(i);   
+        }
+        
+        // max time required for the information to reach the last children
+        dfs(headID, adj, informTime,0);
+        return max_time;
+    }
+};
